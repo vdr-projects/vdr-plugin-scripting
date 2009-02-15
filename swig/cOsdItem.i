@@ -33,4 +33,5 @@ class cOsdItem
         virtual ~cOsdItem();
         cOsdItem(const char *Text, eOSState State = osUnknown, bool Selectable = true);
         virtual eOSState ProcessKey(eKeys Key);
+        void SetText(const char *Text);
 };

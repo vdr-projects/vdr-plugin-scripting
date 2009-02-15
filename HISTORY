@@ -1,3 +1,8 @@
+2009-xx-xx: Version x.x.x
+
+- Added RDoc documentation (Closes: #90)
+- Added on_keypress event to menu (Closes: #96)
+
 2009-02-14: Version 0.0.1
 
 - Initial proof-of-concept release

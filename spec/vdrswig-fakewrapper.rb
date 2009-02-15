@@ -27,8 +27,13 @@ module Vdr
     OsEnd = :OsEnd
 
     KOk = 1
+    KRed = 2
+    KGreen = 3
+    KBlue = 4
+    KYellow = 5
+    
     class COsdMenu
-      attr_reader :cosdmenu_ctor_arguments, :current
+      attr_reader :cosdmenu_ctor_arguments, :current, :COsdMenu_help_texts, :COsdMenu_cleared
 
       def initialize(*args)
         @cosdmenu_ctor_arguments = args 
@@ -39,14 +44,26 @@ module Vdr
 
       def add(item)
       end
-
+      
       def process_key(key)
         return OsUnknown
+      end
+      
+      def fake_process_key(key)
+        return process_key(key)
       end
 
       def simulate_select(index)
         @current = index
         process_key(Vdr::Swig::KOk)
+      end
+ 
+      def set_help(red, green, yellow, blue)
+        @COsdMenu_help_texts = [red, green, yellow, blue]
+      end
+      
+      def clear
+        @COsdMenu_cleared = true
       end
     end
 

@@ -68,21 +68,65 @@ describe Vdr::Osd::Menu do
   end 
  
   it 'should return the parents result from process_key' do
-    @menu.process_key(Vdr::Swig::KOk).should == Vdr::Swig::OsUnknown
+    @menu.fake_process_key(Vdr::Swig::KOk).should == Vdr::Swig::OsUnknown
   end
 
   it 'should return OsBack from process_key when requesting to close the menu' do
     @menu.close
-    @menu.process_key(Vdr::Swig::KOk).should == Vdr::Swig::OsBack
+    @menu.fake_process_key(Vdr::Swig::KOk).should == Vdr::Swig::OsBack
   end
 
   it 'should return OsEnd from process_key when requesting to close all menus' do
     @menu.close_all
-    @menu.process_key(Vdr::Swig::KOk).should == Vdr::Swig::OsEnd
+    @menu.fake_process_key(Vdr::Swig::KOk).should == Vdr::Swig::OsEnd
   end
   
   it 'should add a new menu item' do
     @menu.add_new_item('item')
     @menu[0].text.should == 'item'
+  end
+
+  it 'should set the color help texts' do
+    @menu.red_help = 'Red'
+    @menu.COsdMenu_help_texts.should == ['Red', nil, nil, nil] 
+
+    @menu.green_help = 'Green'
+    @menu.COsdMenu_help_texts.should == ['Red', 'Green', nil, nil] 
+
+    @menu.yellow_help = 'Yellow'
+    @menu.COsdMenu_help_texts.should == ['Red', 'Green', 'Yellow', nil] 
+
+    @menu.blue_help = 'Blue'
+    @menu.COsdMenu_help_texts.should == ['Red', 'Green', 'Yellow', 'Blue'] 
+  end
+
+  it 'should trigger the on_keypress event when a key is pressed' do
+    pressed_key = nil
+    @menu.on_keypress do |key|
+      pressed_key = key
+    end
+    @menu.fake_process_key(Vdr::Swig::KRed)
+    pressed_key.should == :key_red
+  end
+
+  it 'should trigger the on_keypress event when a specific key is pressed' do
+    red_key_pressed = false
+    @menu.on_keypress(:key_red) do
+      red_key_pressed = true
+    end
+    @menu.fake_process_key(Vdr::Swig::KGreen)
+    red_key_pressed.should == false
+    @menu.fake_process_key(Vdr::Swig::KRed)
+    red_key_pressed.should == true
+  end
+  
+  it 'should clear the menu' do
+    @menu.clear
+    @menu.COsdMenu_cleared.should == true
+  end
+  
+  it 'should redisplay the menu when refreshing' do
+    @menu.should_receive(:display)
+    @menu.refresh
   end
 end

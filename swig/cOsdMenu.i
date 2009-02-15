@@ -44,12 +44,14 @@ class cOsdMenu
 {
     protected:
         eOSState AddSubMenu(cOsdMenu *SubMenu);
+        virtual eOSState ProcessKey(eKeys Key);
+        void SetHelp(const char *Red, const char *Green = NULL, const char *Yellow = NULL, const char *Blue = NULL);
+        void Add(cOsdItem *Item, bool Current = false, cOsdItem *After = NULL);
+        void SetTitle(const char *Title);
+        virtual void Clear();
+        virtual void Display(void);
 
     public:
         cOsdMenu(const char *Title, int c0 = 0, int c1 = 0, int c2 = 0, int c3 = 0, int c4 = 0);
         virtual ~cOsdMenu();
-        int Current(void) const;
-        void Add(cOsdItem *Item, bool Current = false, cOsdItem *After = NULL);
-        void Ins(cOsdItem *Item, bool Current = false, cOsdItem *Before = NULL);
-        virtual eOSState ProcessKey(eKeys Key);
 };

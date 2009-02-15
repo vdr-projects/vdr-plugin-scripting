@@ -20,7 +20,9 @@
 
 module Vdr
   module Osd
+    # A TextView displays a vertical scrollable text in the OSD
     class TextView < Vdr::Swig::CMenuText
+      # Creates a new text view with the given _title_ and _text_
       def initialize(title, text)
         super(title, text)
       end

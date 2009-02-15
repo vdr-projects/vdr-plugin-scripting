@@ -73,6 +73,11 @@ OBJS := $(addsuffix .o,$(basename ${SRCS}))
 
 OBJS += $(addsuffix _wrap.o,$(basename ${INTERFACES}))
 
+### RDoc
+
+RDOC ?= /usr/bin/rdoc
+RDOC_INPUT := $(shell find lib -name "*")
+
 ### Implicit rules:
 
 .PRECIOUS: %_wrap.cc
@@ -125,7 +130,7 @@ i18n: $(I18Nmsgs)
 
 ### Targets:
 
-all: libvdr-$(PLUGIN).so i18n
+all: libvdr-$(PLUGIN).so i18n rdoc
 
 test:
 	spec -c -fs .
@@ -133,6 +138,12 @@ test:
 libvdr-$(PLUGIN).so: $(OBJS)
 	$(CXX) $(CXXFLAGS) -shared $(OBJS) -L. $(LIBS) -o $@
 	@cp $@ $(LIBDIR)/$@.$(APIVERSION)
+
+.rdoc: $(RDOC_INPUT)
+	$(RDOC) --main lib/README -S -U lib/README -o rdoc $<
+	@touch .rdoc
+
+rdoc: .rdoc
 
 dist: test clean
 	@-rm -rf $(TMPDIR)/$(ARCHIVE)
@@ -147,4 +158,5 @@ dist: test clean
 clean:
 	@-rm -f $(BUILD_DEPFILE) *.so* *.tar.gz core* *~
 	@-rm -f swig/*_wrap.* swigrubyrun.h
+	@-rm -rf rdoc .rdoc
 	@-find . -name \*.\o -exec rm -f {} \; 

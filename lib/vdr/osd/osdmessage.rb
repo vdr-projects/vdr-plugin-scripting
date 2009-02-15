@@ -20,7 +20,9 @@
 
 module Vdr
   module Osd
+    # Provides an interface to display simple one line OSD messages
     class OsdMessage
+      # Display _message_ for then given number of _seconds_
       def OsdMessage.Show(message, seconds=5)
         Vdr::Swig::COsdMessage.confirm(message, seconds, false)
       end
